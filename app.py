@@ -20,16 +20,66 @@ st.set_page_config(
 st.markdown("""
 <style>
     .main-header {
-        font-size: 2.5rem;
+        font-size: 8rem;
         font-weight: 700;
         color: #1f2937;
         text-align: center;
-        margin-bottom: 2rem;
+        margin-bottom: 6rem !important;
         padding: 1rem;
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(90deg, #374151 0%, #6b7280 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
+    }
+    
+    .kpi-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 0.8rem;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border: 1px solid rgba(255,255,255,0.1);
+        overflow: hidden;
+        word-wrap: break-word;
+    }
+    
+    .kpi-card h3.kpi-title {
+        font-size: 1.2rem !important;
+        font-weight: 600 !important;
+        font-family: 
+        opacity: 0.95;
+        margin: 0 0 0.15rem 0 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.1px;
+        line-height: 0.5 !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: white !important;
+    }
+    
+    .kpi-card h1.kpi-value {
+        font-size: 2rem !important;
+        font-weight: 700 !important;
+        margin: 0.1rem 0 !important;
+        line-height: 0.5 !important;
+        color: #ffffff !important;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .kpi-card p.kpi-delta {
+        font-size: 0.4rem !important;
+        margin: 0 !important;
+        font-weight: 500 !important;
+        opacity: 0.9;
+        line-height: 1 !important;
     }
     
     .metric-container {
@@ -38,15 +88,6 @@ st.markdown("""
         border-radius: 10px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         border-left: 4px solid #667eea;
-    }
-    
-    .kpi-card {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 1.5rem;
-        border-radius: 15px;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     
     .sidebar .sidebar-content {
@@ -76,7 +117,7 @@ def load_data():
         return None, None
 
 def create_kpi_card(title, value, delta=None, format_type="number"):
-    """Create a styled KPI card"""
+    """Create a styled KPI card with uniform sizing and readable text"""
     if pd.isna(value):
         formatted_value = "N/A"
     elif format_type == "currency":
@@ -90,21 +131,21 @@ def create_kpi_card(title, value, delta=None, format_type="number"):
     
     delta_html = ""
     if delta is not None and not pd.isna(delta):
-        delta_color = "green" if delta >= 0 else "red"
-        delta_symbol = "↑" if delta >= 0 else "↓"
-        delta_html = f'<p style="color: {delta_color}; margin: 0; font-size: 0.9rem;">{delta_symbol} {abs(delta):.1f}%</p>'
+        delta_color = "#10b981" if delta >= 0 else "#ef4444"
+        delta_symbol = "↗" if delta >= 0 else "↘"
+        delta_html = f'<p class="kpi-delta" style="color: {delta_color};">{delta_symbol} {abs(delta):.1f}%</p>'
     
     st.markdown(f"""
     <div class="kpi-card">
-        <h3 style="margin: 0; font-size: 1rem; opacity: 0.9;">{title}</h3>
-        <h1 style="margin: 0.5rem 0; font-size: 2rem;">{formatted_value}</h1>
+        <h3 class="kpi-title">{title}</h3>
+        <h1 class="kpi-value">{formatted_value}</h1>
         {delta_html}
     </div>
     """, unsafe_allow_html=True)
 
 def main():
     # Header
-    st.markdown('<h1 class="main-header">📊 Marketing Analytics Dashboard</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 class="main-header"> Marketing Analytics Dashboard</h1>', unsafe_allow_html=True)
     
     # Load data
     master_daily, marketing_campaigns = load_data()
